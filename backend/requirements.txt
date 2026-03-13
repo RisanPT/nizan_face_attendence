@@ -2,6 +2,7 @@ django>=4.2,<5.0
 djangorestframework
 django-cors-headers
 face_recognition
+dlib==19.24.2
 opencv-python-headless
 geopy
 numpy

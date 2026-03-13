@@ -7,8 +7,6 @@ RUN apt-get update && apt-get install -y \
     cmake \
     libopenblas-dev \
     liblapack-dev \
-    libx11-dev \
-    libgtk-3-dev \
     python3-dev \
     git \
     pkg-config \
@@ -19,8 +17,15 @@ WORKDIR /app
 # Copy requirements first for Docker layer caching
 COPY requirements.txt .
 
-# Install dlib 19.24.2 (last version with pre-built wheels for py3.11 linux)
+# Upgrade pip
 RUN pip install --upgrade pip
+
+# Fix for cmake 4.x incompatibility with dlib's old pybind11
+ENV CMAKE_POLICY_VERSION_MINIMUM=3.5
+# Disable GUI to speed up dlib compilation
+ENV DLIB_NO_GUI_SUPPORT=1
+
+# Install dlib and all requirements
 RUN pip install dlib==19.24.2
 RUN pip install -r requirements.txt
 

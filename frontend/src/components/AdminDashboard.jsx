@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -21,7 +21,7 @@ const AdminDashboard = () => {
 
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/employees/');
+      const response = await api.get('/api/employees/');
       setEmployees(response.data);
     } catch (error) {
       console.error('Error fetching employees:', error);
@@ -39,7 +39,7 @@ const AdminDashboard = () => {
     formData.append('employee_id', newEmployee.employee_id);
     formData.append('profile_picture', newEmployee.profile_picture);
     try {
-      await axios.post('http://127.0.0.1:8000/api/employees/', formData, {
+      await api.post('/api/employees/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setNewEmployee({ name: '', employee_id: '', profile_picture: null });
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
       formData.append('profile_picture', editingEmployee.profile_picture);
     }
     try {
-      await axios.put(`http://127.0.0.1:8000/api/employees/${editingEmployee.id}/`, formData, {
+      await api.put(`/api/employees/${editingEmployee.id}/`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setEditingEmployee(null);
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
   const handleDeleteEmployee = async (id) => {
     if (window.confirm('Are you sure you want to delete this employee?')) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/employees/${id}/`);
+        await api.delete(`/api/employees/${id}/`);
         fetchEmployees();
       } catch (error) {
         console.error('Error deleting employee:', error);
@@ -88,9 +88,9 @@ const AdminDashboard = () => {
     }
     setLogsLoading(true);
     try {
-      let url = `http://127.0.0.1:8000/api/attendance-logs/?start_date=${startDate}&end_date=${endDate}`;
+      let url = `/api/attendance-logs/?start_date=${startDate}&end_date=${endDate}`;
       if (selectedEmployee) url += `&employee_id=${selectedEmployee}`;
-      const response = await axios.get(url);
+      const response = await api.get(url);
       setAttendanceLogs(response.data);
     } catch (error) {
       console.error('Error fetching logs:', error);
@@ -104,8 +104,8 @@ const AdminDashboard = () => {
     if (!startDate || !endDate) { alert("Select dates first."); return; }
     setPdfLoading('all');
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/attendance-report/?start_date=${startDate}&end_date=${endDate}`,
+      const response = await api.get(
+        `/api/attendance-report/?start_date=${startDate}&end_date=${endDate}`,
         { responseType: 'blob' }
       );
       triggerDownload(response.data, `attendance_all_${startDate}_to_${endDate}.pdf`);
@@ -121,8 +121,8 @@ const AdminDashboard = () => {
     if (!startDate || !endDate) { alert("Select a date range first before downloading."); return; }
     setPdfLoading(employeeId);
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/attendance-employee-pdf/?start_date=${startDate}&end_date=${endDate}&employee_id=${employeeId}`,
+      const response = await api.get(
+        `/api/attendance-employee-pdf/?start_date=${startDate}&end_date=${endDate}&employee_id=${employeeId}`,
         { responseType: 'blob' }
       );
       triggerDownload(response.data, `${employeeName}_${startDate}_to_${endDate}.pdf`);

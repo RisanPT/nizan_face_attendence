@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import axios from 'axios';
+import api from '../api';
 import './AttendanceCapture.css';
 
 const AttendanceCapture = () => {
@@ -50,7 +50,7 @@ const AttendanceCapture = () => {
     setStatus('Submitting...', 'info');
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/submit-attendance/', {
+      const response = await api.post('/api/submit-attendance/', {
         employee_id: employeeId,
         image: imageSrc,
         latitude: lat,

@@ -1,4 +1,4 @@
-django>=4.2
+django>=4.2,<5.0
 djangorestframework
 django-cors-headers
 face_recognition
@@ -14,5 +14,3 @@ dj-database-url
 cloudinary
 django-cloudinary-storage
 python-dotenv
-cmake
-dlib

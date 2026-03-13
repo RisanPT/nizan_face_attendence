@@ -1,0 +1,7 @@
+django
+djangorestframework
+face_recognition
+opencv-python-headless
+geopy
+numpy
+django-cors-headers
